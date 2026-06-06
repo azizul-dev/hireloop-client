@@ -50,15 +50,22 @@ export default function PostJobPage() {
       createdAt: new Date().toISOString(),
     };
 
-
-    const res = await createJob(finalPayload);
-    if (res.insertedId) {
-      toast.success("Job posted successfully!");
-      e.target.reset();
-      setIsRemote(false);
-      redirect(`/dashboard/recruiter`);
+    try {
+      const res = await createJob(finalPayload);
+      if (res?.insertedId) {
+        toast.success("Job posted successfully!");
+        e.target.reset();
+        setIsRemote(false);
+        redirect(`/dashboard/recruiter`);
+      } else {
+        toast.error("Failed to post job. Please try again.");
+      }
+    } catch (err) {
+      console.error("Submit job error:", err);
+      toast.error("Failed to post job. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
-
   };
 
   return (

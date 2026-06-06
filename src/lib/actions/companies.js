@@ -1,15 +1,17 @@
 "use server";
 
-export const createJob = async (newJobData) => {
+export const createCompany = async (newCompanyData) => {
   const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:8000";
   
+  console.log("baseUrl:", baseUrl);
+  
   try {
-    const res = await fetch(`${baseUrl}/api/jobs`, {
+    const res = await fetch(`${baseUrl}/api/companies`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(newJobData),
+      body: JSON.stringify(newCompanyData),
     });
 
     if (!res.ok) {
@@ -25,7 +27,7 @@ export const createJob = async (newJobData) => {
 
     return await res.json();
   } catch (error) {
-    console.error("Error inside createJob server action:", error);
+    console.error("Error inside createCompany server action:", error);
     throw error;
   }
 };

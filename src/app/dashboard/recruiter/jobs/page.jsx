@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@heroui/react";
 import { getCompanyJobs } from "@/lib/api/jobs";
-import { useSession } from "@/lib/auth-client";
+
 
 const EditIcon = () => (
   <svg

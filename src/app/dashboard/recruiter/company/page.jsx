@@ -11,6 +11,7 @@ import {
   ListBox,
   TextArea,
   Button,
+  toast,
 } from "@heroui/react";
 import {
   Globe,
@@ -21,6 +22,7 @@ import {
   ShieldCheck,
   ShieldExclamation,
 } from "@gravity-ui/icons";
+import { createCompany } from "@/lib/actions/companies";
 
 export default function RecruiterCompanyPage() {
   const [viewState, setViewState] = useState("empty");
@@ -51,7 +53,7 @@ export default function RecruiterCompanyPage() {
     formData.append("image", file);
 
     try {
-      const IMGBB_API_KEY = "YOUR_IMGBB_API_KEY";
+      const IMGBB_API_KEY = process.env.NEXT_PUBLIC_IMAGE_UPLOAD_API;
       const response = await fetch(
         `https://api.imgbb.com/1/upload?key=${IMGBB_API_KEY}`,
         {
@@ -90,11 +92,25 @@ export default function RecruiterCompanyPage() {
       status: companyData.status || "Pending",
     };
 
-    setTimeout(() => {
-      setCompanyData(updatedPayload);
+
+    try {
+      // ✅ createCompany এখন শুধুমাত্র submit-এ call হচ্ছে
+      const payload = await createCompany(updatedPayload);
+
+      // ✅ MongoDB insertOne সফল হলে insertedId অথবা acknowledged থাকে
+      if (payload?.insertedId || payload?.acknowledged) {
+        toast.success("Company profile saved successfully!");
+        setCompanyData(updatedPayload);
+        setViewState("view");
+      } else {
+        toast.error("Something went wrong. Please try again.");
+      }
+    } catch (err) {
+      console.error("Submit error:", err);
+      toast.error("Failed to save company. Please try again.");
+    } finally {
       setIsLoading(false);
-      setViewState("view");
-    }, 800);
+    }
   };
 
   const renderStatusBadge = (status) => {
@@ -133,7 +149,6 @@ export default function RecruiterCompanyPage() {
   return (
     <div className="min-h-screen bg-[#121212] text-white p-3 sm:p-4 md:p-8">
       <div className="w-full max-w-4xl mx-auto bg-[#1C1C1E] border border-[#2A2A2C] rounded-xl shadow-xl overflow-hidden">
-
         {/* ======================================================================= */}
         {/* STATE 1: EMPTY PROMPT STATE                                             */}
         {/* ======================================================================= */}
@@ -209,7 +224,8 @@ export default function RecruiterCompanyPage() {
                   rel="noreferrer"
                   className="text-sky-400 hover:underline flex items-center gap-1.5 break-all"
                 >
-                  <Globe className="w-4 h-4 flex-shrink-0" /> {companyData.websiteUrl}
+                  <Globe className="w-4 h-4 flex-shrink-0" />{" "}
+                  {companyData.websiteUrl}
                 </a>
               </div>
               <div className="space-y-1">
@@ -217,7 +233,8 @@ export default function RecruiterCompanyPage() {
                   HQ Location
                 </span>
                 <div className="text-zinc-200 flex items-center gap-1.5">
-                  <MapPin className="w-4 h-4 flex-shrink-0" /> {companyData.location}
+                  <MapPin className="w-4 h-4 flex-shrink-0" />{" "}
+                  {companyData.location}
                 </div>
               </div>
               <div className="sm:col-span-2 space-y-1">
@@ -241,9 +258,11 @@ export default function RecruiterCompanyPage() {
             onSubmit={handleSubmit}
             className="p-4 sm:p-6 md:p-8 space-y-6 sm:space-y-8"
           >
-            <Fieldset legend="Company Specifications" className="space-y-5 sm:space-y-6">
+            <Fieldset
+              legend="Company Specifications"
+              className="space-y-5 sm:space-y-6"
+            >
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-
                 {/* Company Name */}
                 <TextField
                   isRequired
