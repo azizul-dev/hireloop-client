@@ -67,7 +67,7 @@ export default function SigninPage() {
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-background px-4">
-      <Card className="w-full max-w-md p-8">
+      <Card className="w-full max-w-md p-6 sm:p-8">
         <button
           onClick={() => router.back()}
           className="mb-4 flex items-center gap-2 text-sm text-default-500 hover:text-default-900 transition"

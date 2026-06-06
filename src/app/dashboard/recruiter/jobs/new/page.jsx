@@ -62,7 +62,7 @@ export default function PostJobPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#121212] text-[#E4E4E7] flex items-center justify-center p-6">
+    <div className="min-h-screen bg-[#121212] text-[#E4E4E7] flex items-center justify-center p-3 sm:p-4 md:p-8">
       <div className="w-full max-w-3xl bg-[#1C1C1E] rounded-xl border border-[#2A2A2C] shadow-2xl overflow-hidden">
 
         {/* Header */}
@@ -296,17 +296,17 @@ export default function PostJobPage() {
           </Fieldset>
 
           {/* Actions */}
-          <div className="flex justify-end gap-3 pt-4 border-t border-[#2A2A2C]">
+          <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t border-[#2A2A2C]">
             <Button
               type="button"
-              className="px-4 py-2 text-sm text-[#E4E4E7] border border-[#3A3A3C] bg-transparent rounded-lg hover:bg-[#2A2A2C]"
+              className="w-full sm:w-auto px-4 py-2 text-sm text-[#E4E4E7] border border-[#3A3A3C] bg-transparent rounded-lg hover:bg-[#2A2A2C] text-center"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               isLoading={isLoading}
-              className="px-4 py-2 text-sm bg-white text-black font-semibold rounded-lg hover:bg-[#E4E4E7]"
+              className="w-full sm:w-auto px-4 py-2 text-sm bg-white text-black font-semibold rounded-lg hover:bg-[#E4E4E7] text-center"
             >
               Publish Job
             </Button>

@@ -37,27 +37,51 @@ const DashboardSidebar = () => {
   );
   return (
     <>
-    <aside className="hidden w-64 shrink-0 border-r lg:block">{navContent}</aside>
-      <Drawer>
-        <Button
-          className="lg:hidden
-        "
-          variant="secondary"
-        >
-          <LayoutSideContentLeft />
-        </Button>
-        <Drawer.Backdrop>
-          <Drawer.Content placement="left">
-            <Drawer.Dialog>
-              <Drawer.CloseTrigger />
-              <Drawer.Header>
-                <Drawer.Heading>Navigation</Drawer.Heading>
-              </Drawer.Header>
-              <Drawer.Body>{navContent}</Drawer.Body>
-            </Drawer.Dialog>
-          </Drawer.Content>
-        </Drawer.Backdrop>
-      </Drawer>
+      {/* Desktop Sidebar */}
+      <aside className="hidden w-64 shrink-0 border-r border-white/[0.08] bg-[#111118] p-6 lg:block">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex h-8 w-8 items-center justify-center rounded bg-violet-700">
+            <svg className="h-4.5 w-4.5 fill-white" viewBox="0 0 24 24">
+              <path d="M8 5v14l11-7z" />
+            </svg>
+          </div>
+          <span className="text-md font-bold text-white">Hire Loop</span>
+        </div>
+        {navContent}
+      </aside>
+
+      {/* Mobile Top Header */}
+      <div className="flex h-16 w-full items-center justify-between border-b border-white/[0.08] bg-[#111118] px-6 lg:hidden">
+        <div className="flex items-center gap-3">
+          <Drawer>
+            <Button
+              className="p-0 min-w-0 h-9 w-9 bg-transparent hover:bg-white/[0.08] border border-white/[0.08] rounded-lg text-white"
+              variant="secondary"
+            >
+              <LayoutSideContentLeft className="size-5" />
+            </Button>
+            <Drawer.Backdrop>
+              <Drawer.Content placement="left">
+                <Drawer.Dialog className="bg-[#111118] text-white p-6 h-full w-80 border-r border-white/[0.08]">
+                  <div className="flex items-center justify-between pb-4 border-b border-white/[0.08]">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded bg-violet-700">
+                        <svg className="h-4.5 w-4.5 fill-white" viewBox="0 0 24 24">
+                          <path d="M8 5v14l11-7z" />
+                        </svg>
+                      </div>
+                      <span className="text-md font-bold text-white">Hire Loop</span>
+                    </div>
+                    <Drawer.CloseTrigger className="text-white hover:text-white/80" />
+                  </div>
+                  <Drawer.Body className="mt-4">{navContent}</Drawer.Body>
+                </Drawer.Dialog>
+              </Drawer.Content>
+            </Drawer.Backdrop>
+          </Drawer>
+          <span className="text-sm font-semibold text-white">Dashboard</span>
+        </div>
+      </div>
     </>
   );
 };

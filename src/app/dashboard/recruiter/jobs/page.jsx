@@ -117,21 +117,21 @@ export default function RecruiterJobs({ companyId = "comp_98723" }) {
   );
 
   return (
-    <div className="p-6">
+    <div className="p-4 sm:p-6 lg:p-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-5">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
         <div>
           <h1 className="text-xl font-semibold text-[#f0f0f0]">Company Jobs</h1>
           <p className="text-sm text-[#666] mt-1">Manage your job postings</p>
         </div>
-        <button className="flex items-center gap-2 bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors">
+        <button className="flex items-center gap-2 justify-center bg-blue-500 hover:bg-blue-600 text-white text-sm font-medium px-4 py-2 rounded-lg transition-colors w-full sm:w-auto">
           <PlusIcon /> Post New Job
         </button>
       </div>
 
       {/* Filters + Search */}
-      <div className="flex items-center justify-between flex-wrap gap-3 mb-4">
-        <div className="flex gap-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-4">
+        <div className="flex flex-wrap gap-2">
           {FILTERS.map((f) => (
             <button
               key={f}
@@ -151,7 +151,7 @@ export default function RecruiterJobs({ companyId = "comp_98723" }) {
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           placeholder="Search jobs..."
-          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-3 py-1.5 text-sm text-[#aaa] outline-none w-52 placeholder:text-[#444] focus:border-[#3a3a3a]"
+          className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-lg px-3 py-1.5 text-sm text-[#aaa] outline-none w-full md:w-64 placeholder:text-[#444] focus:border-[#3a3a3a]"
         />
       </div>
 
@@ -164,86 +164,90 @@ export default function RecruiterJobs({ companyId = "comp_98723" }) {
         className="bg-[#1a1a1a] border border-[#2a2a2a] rounded-[14px] overflow-hidden"
         shadow="none"
       >
-        {/* Head */}
-        <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_80px] px-5 py-3 border-b border-[#252525] bg-[#161616]">
-          {[
-            "Job Title",
-            "Category",
-            "Salary",
-            "Deadline",
-            "Status",
-            "Actions",
-          ].map((h) => (
-            <span
-              key={h}
-              className="text-[11px] font-medium text-[#555] uppercase tracking-wider"
-            >
-              {h}
-            </span>
-          ))}
-        </div>
+        <div className="overflow-x-auto w-full">
+          <div className="min-w-[850px]">
+            {/* Head */}
+            <div className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_80px] px-5 py-3 border-b border-[#252525] bg-[#161616]">
+              {[
+                "Job Title",
+                "Category",
+                "Salary",
+                "Deadline",
+                "Status",
+                "Actions",
+              ].map((h) => (
+                <span
+                  key={h}
+                  className="text-[11px] font-medium text-[#555] uppercase tracking-wider"
+                >
+                  {h}
+                </span>
+              ))}
+            </div>
 
-        {/* Rows */}
-        {loading ? (
-          <div className="py-12 text-center text-sm text-[#444]">
-            Loading jobs...
-          </div>
-        ) : filtered.length === 0 ? (
-          <div className="py-12 text-center text-sm text-[#444]">
-            No jobs found.
-          </div>
-        ) : (
-          filtered.map((job) => {
-            const s = statusConfig[job.status] ?? statusConfig.active;
-            return (
-              <div
-                key={job._id}
-                className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_80px] px-5 py-4 border-b border-[#1f1f1f] last:border-b-0 items-center hover:bg-[#1f1f1f] transition-colors"
-              >
-                {/* Title */}
-                <div>
-                  <p className="text-sm font-medium text-[#e8e8e8]">
-                    {job.title}
-                  </p>
-                  <div className="flex gap-2 mt-0.5 text-xs text-[#555]">
-                    <span>📍 {job.location}</span>
-                    <span>· {job.type}</span>
-                    <span>· {job.isRemote ? "Remote" : "On-site"}</span>
-                  </div>
-                </div>
-                {/* Category */}
-                <span className="text-sm text-[#aaa]">{job.category}</span>
-                {/* Salary */}
-                <span className="text-sm text-blue-400 font-medium">
-                  {job.currency === "USD" ? "$" : job.currency}
-                  {job.salaryMin}–{job.salaryMax}
-                </span>
-                {/* Deadline */}
-                <span className="text-sm text-[#aaa]">
-                  {formatDeadline(job.deadline)}
-                </span>
-                {/* Status */}
-                <div>
-                  <span
-                    className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${s.bg} ${s.text}`}
-                  >
-                    <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
-                    {s.label}
-                  </span>
-                </div>
-                {/* Actions */}
-                <div className="flex gap-2">
-                  <button className="p-1.5 bg-[#252525] hover:bg-[#2f2f2f] border border-[#333] text-[#aaa] hover:text-[#e8e8e8] rounded-md transition-colors">
-                    <EditIcon />
-                  </button>
-                  <button className="p-1.5 bg-[#252525] hover:bg-red-500/10 border border-[#333] hover:border-red-500/30 text-[#aaa] hover:text-red-400 rounded-md transition-colors">
-                    <DeleteIcon />
-                  </button>
-                </div>
+            {/* Rows */}
+            {loading ? (
+              <div className="py-12 text-center text-sm text-[#444]">
+                Loading jobs...
               </div>
-            );
-          })
-        )}
+            ) : filtered.length === 0 ? (
+              <div className="py-12 text-center text-sm text-[#444]">
+                No jobs found.
+              </div>
+            ) : (
+              filtered.map((job) => {
+                const s = statusConfig[job.status] ?? statusConfig.active;
+                return (
+                  <div
+                    key={job._id}
+                    className="grid grid-cols-[2fr_1fr_1fr_1fr_1fr_80px] px-5 py-4 border-b border-[#1f1f1f] last:border-b-0 items-center hover:bg-[#1f1f1f] transition-colors"
+                  >
+                    {/* Title */}
+                    <div>
+                      <p className="text-sm font-medium text-[#e8e8e8]">
+                        {job.title}
+                      </p>
+                      <div className="flex gap-2 mt-0.5 text-xs text-[#555]">
+                        <span>📍 {job.location}</span>
+                        <span>· {job.type}</span>
+                        <span>· {job.isRemote ? "Remote" : "On-site"}</span>
+                      </div>
+                    </div>
+                    {/* Category */}
+                    <span className="text-sm text-[#aaa]">{job.category}</span>
+                    {/* Salary */}
+                    <span className="text-sm text-blue-400 font-medium">
+                      {job.currency === "USD" ? "$" : job.currency}
+                      {job.salaryMin}–{job.salaryMax}
+                    </span>
+                    {/* Deadline */}
+                    <span className="text-sm text-[#aaa]">
+                      {formatDeadline(job.deadline)}
+                    </span>
+                    {/* Status */}
+                    <div>
+                      <span
+                        className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${s.bg} ${s.text}`}
+                      >
+                        <span className={`w-1.5 h-1.5 rounded-full ${s.dot}`} />
+                        {s.label}
+                      </span>
+                    </div>
+                    {/* Actions */}
+                    <div className="flex gap-2">
+                      <button className="p-1.5 bg-[#252525] hover:bg-[#2f2f2f] border border-[#333] text-[#aaa] hover:text-[#e8e8e8] rounded-md transition-colors">
+                        <EditIcon />
+                      </button>
+                      <button className="p-1.5 bg-[#252525] hover:bg-red-500/10 border border-[#333] hover:border-red-500/30 text-[#aaa] hover:text-red-400 rounded-md transition-colors">
+                        <DeleteIcon />
+                      </button>
+                    </div>
+                  </div>
+                );
+              })
+            )}
+          </div>
+        </div>
       </Card>
     </div>
   );

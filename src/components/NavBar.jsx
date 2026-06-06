@@ -136,19 +136,37 @@ const NavBar = () => {
             ))}
 
             <li className="mt-3 flex flex-col gap-2 border-t border-white/[0.08] pt-3">
-              <Link
-                href="#"
-                className="block rounded-lg px-4 py-2 text-sm font-semibold text-violet-500 no-underline"
-              >
-                Sign In
-              </Link>
+              {user ? (
+                <>
+                  <div className="px-4 py-2 text-sm font-semibold text-white/90">
+                    Hi, {user.name}!
+                  </div>
+                  <Button
+                    onClick={handleSignOut}
+                    variant="ghost"
+                    className="w-full rounded-lg text-sm font-semibold border-white/[0.08] text-white hover:bg-white/[0.08]"
+                    size="sm"
+                  >
+                    Sign Out
+                  </Button>
+                </>
+              ) : (
+                <>
+                  <Link
+                    href="/signin"
+                    className="block rounded-lg px-4 py-2 text-sm font-semibold text-violet-500 no-underline hover:bg-violet-500/10"
+                  >
+                    Sign In
+                  </Link>
 
-              <Button
-                className="w-full rounded-lg bg-white text-sm font-semibold text-black"
-                size="sm"
-              >
-                Get Started
-              </Button>
+                  <Button
+                    className="w-full rounded-lg bg-white text-sm font-semibold text-black hover:bg-white/90"
+                    size="sm"
+                  >
+                    Get Started
+                  </Button>
+                </>
+              )}
             </li>
           </ul>
         </div>

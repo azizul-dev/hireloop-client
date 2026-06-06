@@ -17,9 +17,11 @@ const RecruiterPage = () => {
   ];
 
   return (
-    <div>
-      <h1 className="text-2xl font-bold">Welcome, {user?.name || "Recruiter"}!</h1>
-      <p className="mt-2 text-gray-600">This is your recruiter dashboard.</p>
+    <div className="p-4 sm:p-6 lg:p-8 space-y-6">
+      <div>
+        <h1 className="text-2xl font-bold text-white">Welcome, {user?.name || "Recruiter"}!</h1>
+        <p className="mt-2 text-sm text-zinc-400">This is your recruiter dashboard.</p>
+      </div>
       <StatsCard Stats={stats} />
     </div>
   );
