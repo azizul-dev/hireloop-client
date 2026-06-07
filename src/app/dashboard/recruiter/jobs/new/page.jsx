@@ -62,7 +62,7 @@ export default function PostJobPage() {
       }
     } catch (err) {
       console.error("Submit job error:", err);
-      toast.error("Failed to post job. Please try again.");
+      // toast.error("Failed to post job. Please try again.");
     } finally {
       setIsLoading(false);
     }
