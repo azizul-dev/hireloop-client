@@ -24,24 +24,30 @@ import {
 } from "@gravity-ui/icons";
 import { createCompany } from "@/lib/actions/companies";
 
-export default function CompanyProfile({ recruiter }) {
-  const [viewState, setViewState] = useState("empty");
+export default function CompanyProfile({ recruiter, recruiterCompany }) {
+  const [viewState, setViewState] = useState(
+    recruiterCompany ? "view" : "empty",
+  );
   const [isLoading, setIsLoading] = useState(false);
   const [logoUploading, setLogoUploading] = useState(false);
 
-  const [industry, setIndustry] = useState("Technology");
-  const [employeeCount, setEmployeeCount] = useState("1-10 employees");
-  const [logoUrl, setLogoUrl] = useState("");
+  const [industry, setIndustry] = useState(
+    recruiterCompany?.industry || "Technology",
+  );
+  const [employeeCount, setEmployeeCount] = useState(
+    recruiterCompany?.employeeCount || "1-10 employees",
+  );
+  const [logoUrl, setLogoUrl] = useState(recruiterCompany?.logo || "");
 
   const [companyData, setCompanyData] = useState({
-    name: "",
-    industry: "",
-    websiteUrl: "",
-    location: "",
-    employeeCount: "",
-    logo: "",
-    description: "",
-    status: "Pending",
+    name: recruiterCompany?.name || "",
+    industry: recruiterCompany?.industry || "",
+    websiteUrl: recruiterCompany?.websiteUrl || "",
+    location: recruiterCompany?.location || "",
+    employeeCount: recruiterCompany?.employeeCount || "",
+    logo: recruiterCompany?.logo || "",
+    description: recruiterCompany?.description || "",
+    status: recruiterCompany?.status || "Pending",
   });
 
   const handleLogoUpload = async (e) => {
@@ -92,7 +98,6 @@ export default function CompanyProfile({ recruiter }) {
       status: companyData.status || "Pending",
       recruiterId: recruiter.id,
     };
-
 
     try {
       // ✅ createCompany এখন শুধুমাত্র submit-এ call হচ্ছে

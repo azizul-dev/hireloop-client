@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Card } from "@heroui/react";
 import { getCompanyJobs } from "@/lib/api/jobs";
+import { useSession } from "@/lib/auth-client";
 
 
 const EditIcon = () => (
@@ -85,11 +86,24 @@ const formatDeadline = (dateStr) => {
 
 const FILTERS = ["All", "active", "closed", "draft"];
 
-export default function RecruiterJobs({ companyId = "comp_98723" }) {
+export default function RecruiterJobs() {
   const [jobs, setJobs] = useState([]);
+  const [companyId, setCompanyId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("All");
   const [search, setSearch] = useState("");
+  const { data: session } = useSession();
+  useEffect(() => {
+  if (!session?.user?.id) return;
+  const fetchCompany = async () => {
+    const res = await fetch(`http://localhost:8000/api/my/companies?recruiterId=${session.user.id}`);
+    const company = await res.json();
+    console.log("company:", company);
+    setCompanyId(company?._id);
+  };
+  fetchCompany();
+}, [session?.user?.id]);
+
 
   useEffect(() => {
     const fetchJobs = async () => {

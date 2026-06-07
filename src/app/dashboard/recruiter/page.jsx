@@ -1,6 +1,8 @@
 'use client';
 import StatsCard from "@/components/dashboard/StatsCard";
 import { useSession } from "@/lib/auth-client";
+import RecruiterJobs from "@/components/dashboard/RecruiterJobs";
+
 
 const RecruiterPage = () => {
   const { data: session, isPending } = useSession();
@@ -23,6 +25,7 @@ const RecruiterPage = () => {
         <p className="mt-2 text-sm text-zinc-400">This is your recruiter dashboard.</p>
       </div>
       <StatsCard Stats={stats} />
+      <RecruiterJobs />
     </div>
   );
 };
