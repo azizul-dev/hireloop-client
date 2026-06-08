@@ -1,6 +1,7 @@
 import { Card, Button, Chip } from "@heroui/react";
 import Image from "next/image";
 import { ArrowRight, Briefcase, CircleDollar, Globe } from "@gravity-ui/icons";
+import Link from "next/link";
 
 export default function JobCard({ job }) {
   const {
@@ -43,7 +44,8 @@ export default function JobCard({ job }) {
         {category && (
           <p className="text-neutral-400 text-xs sm:text-sm leading-relaxed">
             Explore this opportunity in our {category} team. Looking for a
-            proactive individual for this {type?.toLowerCase() || "regular"} role.
+            proactive individual for this {type?.toLowerCase() || "regular"}{" "}
+            role.
           </p>
         )}
 
@@ -82,16 +84,12 @@ export default function JobCard({ job }) {
       </div>
 
       <div className="pt-3 sm:pt-4 pb-0 px-0 flex justify-between items-center">
-        <Button
-          as="a"
+        <Link
           href={`/jobs/${_id}`}
-          variant="light"
-          size="sm"
-          endContent={<ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
-          className="text-neutral-200 hover:text-white font-medium p-0 bg-transparent min-w-0 text-xs sm:text-sm"
+          className="flex items-center gap-1 text-neutral-200 hover:text-white font-medium text-xs sm:text-sm transition-colors"
         >
-          Apply Now
-        </Button>
+          Apply Now <ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+        </Link>
 
         {deadline && (
           <span className="text-xs text-neutral-500">
