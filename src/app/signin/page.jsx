@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Card, Input, Button } from "@heroui/react";
 import { ArrowLeft } from "lucide-react";
@@ -12,6 +12,10 @@ import { authClient } from "@/lib/auth-client";
 
 export default function SigninPage() {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
+
 
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -56,7 +60,7 @@ export default function SigninPage() {
 
       toast.success("Login successful");
 
-      router.push("/");
+      router.push(redirectTo);
     } catch (err) {
       console.error(err);
       toast.error("Something went wrong");
@@ -117,7 +121,7 @@ export default function SigninPage() {
 
         <div className="mt-6 text-center text-sm">
           New to Hire Loop?{" "}
-          <Link href="/signup" className="font-semibold text-primary">
+          <Link href={`/signup?redirect=${redirectTo}`} className="font-semibold text-primary">
             Create Account
           </Link>
         </div>

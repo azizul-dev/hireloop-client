@@ -3,7 +3,7 @@
 import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 import { useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 import { Card, Input, Button } from "@heroui/react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
@@ -13,6 +13,9 @@ import { authClient } from "@/lib/auth-client";
 
 export default function SignupPage() {
   const router = useRouter();
+
+  const searchParams = useSearchParams();
+  const redirectTo = searchParams.get("redirect") || "/";
 
   const [role, setRole] = useState("seeker");
 
@@ -79,7 +82,7 @@ export default function SignupPage() {
       });
 
       setTimeout(() => {
-        router.push("/");
+        router.push(redirectTo);
       }, 1500);
     } catch (err) {
       console.error(err);
@@ -189,7 +192,7 @@ export default function SignupPage() {
 
         <div className="mt-6 text-center text-sm">
           Already have an account?{" "}
-          <Link href="/signin" className="font-semibold text-primary">
+          <Link href={`/signin?redirect=${redirectTo}`} className="font-semibold text-primary">
             Sign In
           </Link>
         </div>
