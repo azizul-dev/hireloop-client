@@ -1,28 +1,25 @@
-import JobCard from "@/components/jobs/JobCard";
+
+import JobBoardClient from "@/components/jobs/JobBoardClient";
 import { getJobs } from "@/lib/api/jobs";
 
-
 export default async function Page() {
-  const jobPayload = {
-    _id: { $oid: "6a257edd041f412b6e81068a" },
-    title: "Frontend Developer",
-    deadline: "2026-06-10",
-    salaryMin: "25",
-    salaryMax: "40",
-    category: "Marketing",
-    type: "Part-time",
-    currency: "EUR",
-    isRemote: true,
-    companyName: "Software Corp",
-    companyLogo: "https://i.ibb.co/7dmQww8N/logo2.avif"
-    
-  };
-
+  // Fetch from the database on the server side
   const jobs = await getJobs();
+  console.log("JOBS DATA:", JSON.stringify(jobs?.slice(0, 2), null, 2));
 
   return (
-    <div className="p-8 bg-black min-h-screen flex items-center justify-center">
-      <JobCard job={jobs[0]} />
+    <div className="p-8 bg-black min-h-screen text-white">
+      <div className="max-w-7xl mx-auto mb-6 px-2">
+        <h1 className="text-3xl font-extrabold tracking-tight text-white">
+          Explore Careers
+        </h1>
+        <p className="text-neutral-400 text-sm mt-1">
+          Find your next opening from your favorite engineering teams.
+        </p>
+      </div>
+
+      {/* Render the core filtering component */}
+      <JobBoardClient initialJobs={jobs || []} />
     </div>
   );
 }

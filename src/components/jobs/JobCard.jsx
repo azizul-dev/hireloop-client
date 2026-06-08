@@ -53,7 +53,7 @@ export default function JobCard({ job }) {
             size="sm"
             className="bg-neutral-800 text-neutral-300 border-none px-2 sm:px-3 text-xs"
           >
-            <Globe className="w-3 h-3 inline mr-1" />
+            <Globe className="w-3 h-3 inline mr-1 text-purple-500" />
             {isRemote ? "Remote" : "Hybrid"}
           </Chip>
 
@@ -63,7 +63,7 @@ export default function JobCard({ job }) {
               size="sm"
               className="bg-neutral-800 text-neutral-300 border-none px-2 sm:px-3 text-xs"
             >
-              <Briefcase className="w-3 h-3 inline mr-1" />
+              <Briefcase className="w-3 h-3 inline mr-1 text-purple-500" />
               {type}
             </Chip>
           )}
@@ -74,7 +74,7 @@ export default function JobCard({ job }) {
               size="sm"
               className="bg-neutral-800 text-neutral-300 border-none px-2 sm:px-3 text-xs"
             >
-              <CircleDollar className="w-3 h-3 inline mr-1" />
+              <CircleDollar className="w-3 h-3 inline mr-1 text-purple-500" />
               {salaryMin}–{salaryMax}/hr ({currency})
             </Chip>
           )}
@@ -84,7 +84,7 @@ export default function JobCard({ job }) {
       <div className="pt-3 sm:pt-4 pb-0 px-0 flex justify-between items-center">
         <Button
           as="a"
-          href={`/jobs/${_id?.$oid}`}
+          href={`/jobs/${_id}`}
           variant="light"
           size="sm"
           endContent={<ArrowRight className="w-3.5 h-3.5 sm:w-4 sm:h-4" />}
@@ -95,7 +95,7 @@ export default function JobCard({ job }) {
 
         {deadline && (
           <span className="text-xs text-neutral-500">
-            Ends: {new Date(deadline).toLocaleDateString()}
+            Ends:{new Date(deadline).toLocaleDateString("en-GB")}
           </span>
         )}
       </div>
