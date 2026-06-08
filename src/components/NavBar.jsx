@@ -7,15 +7,15 @@ import { signOut, useSession,} from "@/lib/auth-client";
 const links = [
   {
     name: "Browse Jobs",
-    href: "#",
+    href: "/jobs",
   },
   {
-    name: "Company",
-    href: "#",
+    name: "Companies",
+    href: "/companies",
   },
   {
     name: "Pricing",
-    href: "#",
+    href: "/pricing",
   },
 ];
 

@@ -5,7 +5,6 @@ import { Card } from "@heroui/react";
 import { getCompanyJobs } from "@/lib/api/jobs";
 import { useSession } from "@/lib/auth-client";
 
-
 const EditIcon = () => (
   <svg
     width="13"
@@ -94,16 +93,17 @@ export default function RecruiterJobs() {
   const [search, setSearch] = useState("");
   const { data: session } = useSession();
   useEffect(() => {
-  if (!session?.user?.id) return;
-  const fetchCompany = async () => {
-    const res = await fetch(`http://localhost:8000/api/my/companies?recruiterId=${session.user.id}`);
-    const company = await res.json();
-    console.log("company:", company);
-    setCompanyId(company?._id);
-  };
-  fetchCompany();
-}, [session?.user?.id]);
-
+    if (!session?.user?.id) return;
+    const fetchCompany = async () => {
+      const res = await fetch(
+        `http://localhost:8000/api/my/companies?recruiterId=${session.user.id}`,
+      );
+      const company = await res.json();
+      console.log("company:", company);
+      setCompanyId(company?._id);
+    };
+    fetchCompany();
+  }, [session?.user?.id]);
 
   useEffect(() => {
     const fetchJobs = async () => {

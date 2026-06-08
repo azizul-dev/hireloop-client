@@ -152,6 +152,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
     );
   };
 
+
   return (
     <div className="min-h-screen bg-[#121212] text-white p-3 sm:p-4 md:p-8">
       <div className="w-full max-w-4xl mx-auto bg-[#1C1C1E] border border-[#2A2A2C] rounded-xl shadow-xl overflow-hidden">
