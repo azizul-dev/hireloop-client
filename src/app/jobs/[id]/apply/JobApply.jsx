@@ -22,7 +22,7 @@ import { useState } from "react";
 import { submitApplication } from "@/lib/actions/applications";
 import { toast } from "sonner";
 
-const JobApply = ({ job }) => {
+const JobApply = ({ job, applicant }) => {
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -33,6 +33,7 @@ const JobApply = ({ job }) => {
       jobId: job._id,
       jobTitle: job.title,
       companyName: job.companyName,
+      applicantId: applicant?.id,
       fullName: formData.get("fullName"),
       email: formData.get("email"),
       country: formData.get("country"),
