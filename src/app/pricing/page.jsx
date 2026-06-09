@@ -7,6 +7,7 @@ import { CircleCheck, ChevronDown, ChevronUp } from "@gravity-ui/icons";
 const seekerPlans = [
   {
     name: "Free",
+    id: "seeker_free",
     price: "$0",
     period: "forever",
     description: "Perfect for getting started",
@@ -21,6 +22,7 @@ const seekerPlans = [
   },
   {
     name: "Pro",
+    id: "seeker_pro",
     price: "$19",
     period: "month",
     description: "For serious job seekers",
@@ -35,6 +37,7 @@ const seekerPlans = [
   },
   {
     name: "Premium",
+    id: "seeker_premium",
     price: "$39",
     period: "month",
     description: "Maximum career advantage",
@@ -53,6 +56,7 @@ const seekerPlans = [
 const recruiterPlans = [
   {
     name: "Free",
+    id: 'recruiter_free',
     price: "$0",
     period: "forever",
     description: "Great for first-year hiring",
@@ -66,6 +70,7 @@ const recruiterPlans = [
   },
   {
     name: "Growth",
+    id: 'recruiter_growth',
     price: "$49",
     period: "month",
     description: "Scale your hiring",
@@ -80,6 +85,7 @@ const recruiterPlans = [
   },
   {
     name: "Enterprise",
+    id: 'recruiter_enterprise',
     price: "$149",
     period: "month",
     description: "For high-volume hiring teams",
@@ -180,15 +186,20 @@ function PlanCard({ plan }) {
         ))}
       </ul>
 
-      <Button
-        className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors ${
-          plan.highlight
-            ? "bg-black text-white hover:bg-neutral-900"
-            : "bg-white text-black hover:bg-neutral-200"
-        }`}
-      >
-        {plan.cta}
-      </Button>
+      <form action="/api/checkout_sessions" method="POST">
+        <input type="hidden" name="plan_id" value={plan.id} />
+
+        <Button
+          type="submit"
+          className={`w-full py-3 rounded-xl font-semibold text-sm transition-colors ${
+            plan.highlight
+              ? "bg-black text-white hover:bg-neutral-900"
+              : "bg-white text-black hover:bg-neutral-200"
+          }`}
+        >
+          {plan.cta}
+        </Button>
+      </form>
     </div>
   );
 }
