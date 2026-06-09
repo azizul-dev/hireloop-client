@@ -58,6 +58,8 @@ export default function SignupPage() {
       return;
     }
 
+    const plan = role === 'seeker' ? 'seeker_free' : 'recruiter_free';
+
     try {
       setLoading(true);
 
@@ -66,6 +68,7 @@ export default function SignupPage() {
         email: formData.email,
         password: formData.password,
         role,
+        plan,
       });
 
       if (error) {

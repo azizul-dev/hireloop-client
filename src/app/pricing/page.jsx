@@ -56,7 +56,7 @@ const seekerPlans = [
 const recruiterPlans = [
   {
     name: "Free",
-    id: 'recruiter_free',
+    id: "recruiter_free",
     price: "$0",
     period: "forever",
     description: "Great for first-year hiring",
@@ -70,7 +70,7 @@ const recruiterPlans = [
   },
   {
     name: "Growth",
-    id: 'recruiter_growth',
+    id: "recruiter_growth",
     price: "$49",
     period: "month",
     description: "Scale your hiring",
@@ -85,7 +85,7 @@ const recruiterPlans = [
   },
   {
     name: "Enterprise",
-    id: 'recruiter_enterprise',
+    id: "recruiter_enterprise",
     price: "$149",
     period: "month",
     description: "For high-volume hiring teams",

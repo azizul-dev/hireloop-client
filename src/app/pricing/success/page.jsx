@@ -1,6 +1,7 @@
 import { stripe } from "@/lib/stripe";
 import { redirect } from "next/navigation";
 import Link from "next/link";
+import { createSubscription } from "@/lib/actions/subscriptions";
 
 export default async function Success({ searchParams }) {
   const { session_id } = await searchParams;
@@ -13,18 +14,38 @@ export default async function Success({ searchParams }) {
     expand: ["line_items", "payment_intent"],
   });
 
+  console.log("Session Metadata:", session.metadata);
+
+  if (session.status === "open") {
+    redirect("/");
+  }
+
   const customerEmail = session.customer_details?.email;
+  const planId = session.metadata?.planId;
+  const userId = session.metadata?.userId;
 
   const planName = session.line_items?.data?.[0]?.description || "Premium Plan";
 
-  if (session.status === "open") {
-    return redirect("/");
+  // ⚠️ Temporary solution
+  // Production এ Webhook ব্যবহার করবে
+  if (session.status === "complete") {
+    const subsInfo = {
+      userId,
+      email: customerEmail,
+      planId,
+      stripeSessionId: session.id,
+    };
+
+    try {
+      await createSubscription(subsInfo);
+    } catch (error) {
+      console.log("Subscription save failed:", error);
+    }
   }
 
   return (
     <div className="min-h-[80vh] flex items-center justify-center px-4 py-12 bg-black">
       <div className="max-w-lg w-full bg-[#111111] border border-neutral-800 rounded-3xl p-8 text-center shadow-2xl">
-        {/* Success Icon */}
         <div className="w-20 h-20 mx-auto rounded-full bg-green-500/10 flex items-center justify-center mb-6">
           <svg
             className="w-10 h-10 text-green-500"
@@ -49,13 +70,11 @@ export default async function Success({ searchParams }) {
           Thank you for subscribing to Hire Loop.
         </p>
 
-        {/* Plan Details */}
         <div className="bg-neutral-900 rounded-xl p-4 mb-4 border border-neutral-800">
           <p className="text-sm text-neutral-500">Activated Plan</p>
           <p className="text-white font-semibold text-lg mt-1">{planName}</p>
         </div>
 
-        {/* Email */}
         <div className="bg-neutral-900 rounded-xl p-4 mb-6 border border-neutral-800">
           <p className="text-sm text-neutral-500">Confirmation Email Sent To</p>
           <p className="font-medium text-white break-all mt-1">

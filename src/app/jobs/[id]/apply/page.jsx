@@ -6,6 +6,8 @@ import JobApply from "./JobApply";
 import { getApplicationsByApplicant } from "@/lib/api/applications";
 import Link from "next/link";
 import { Button } from "@heroui/react";
+import { getPlanById } from "@/lib/api/plans";
+
 
 const JobApplyPage = async ({ params }) => {
   const { id } = await params;
@@ -39,10 +41,8 @@ const JobApplyPage = async ({ params }) => {
   }
 
   const applications = await getApplicationsByApplicant(user.id);
-  const plan = {
-    name: "Free",
-    maxApplicationsPerMonth: 3,
-  };
+
+  const plan = await getPlanById(user?.plan || 'seeker_free')
   const job = await getJobById(id);
   const remaining = plan.maxApplicationsPerMonth - applications.length;
   const limitReached = applications.length >= plan.maxApplicationsPerMonth;
