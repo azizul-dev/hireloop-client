@@ -34,6 +34,7 @@ const JobApply = ({ job, applicant }) => {
       jobTitle: job.title,
       companyName: job.companyName,
       applicantId: applicant?.id,
+      status: 'applied',
       fullName: formData.get("fullName"),
       email: formData.get("email"),
       country: formData.get("country"),

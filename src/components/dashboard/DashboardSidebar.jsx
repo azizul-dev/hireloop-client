@@ -28,7 +28,7 @@ const DashboardSidebar = async () => {
   const seekerNavLinks = [
   { icon: House, href: "/dashboard/candidate", label: "Dashboard" },
   { icon: Magnifier, href: "/dashboard/candidate/jobs", label: "Find Jobs" },
-  { icon: Briefcase, href: "/dashboard/candidate/applications", label: "My Applications" },
+  { icon: Briefcase, href: "/dashboard/seeker/applications", label: "My Applications" },
   { icon: Person, href: "/dashboard/candidate/profile", label: "My Profile" },
   { icon: Gear, href: "/dashboard/candidate/settings", label: "Settings" },
 ];
