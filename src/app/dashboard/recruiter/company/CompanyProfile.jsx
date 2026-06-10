@@ -188,11 +188,17 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
             <div className="flex flex-col gap-4 pb-5 sm:pb-6 border-b border-[#2A2A2C]">
               {/* Top row: logo + name + badges */}
               <div className="flex flex-col xs:flex-row items-start xs:items-center gap-3 sm:gap-4">
-                <img
-                  src={companyData.logo}
-                  alt="Company Logo"
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-[#2A2A2C] border border-[#3A3A3C] object-cover flex-shrink-0"
-                />
+                {companyData.logo ? (
+                  <img
+                    src={companyData.logo}
+                    alt="Company Logo"
+                    className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-[#2A2A2C] border border-[#3A3A3C] object-cover flex-shrink-0"
+                  />
+                ) : (
+                  <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg bg-[#2A2A2C] border border-[#3A3A3C] flex items-center justify-center flex-shrink-0 text-zinc-400">
+                    <Factory className="w-6 h-6 sm:w-8 sm:h-8" />
+                  </div>
+                )}
                 <div className="min-w-0">
                   <h1 className="text-xl sm:text-2xl font-bold tracking-tight truncate">
                     {companyData.name}

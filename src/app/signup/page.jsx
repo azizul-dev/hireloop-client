@@ -4,6 +4,7 @@ import { Description, Label, Radio, RadioGroup } from "@heroui/react";
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 import { Card, Input, Button } from "@heroui/react";
 import { Eye, EyeOff, ArrowLeft } from "lucide-react";
@@ -11,7 +12,7 @@ import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
-export default function SignupPage() {
+function SignupPageContent() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -201,5 +202,13 @@ export default function SignupPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+export default function SignupPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignupPageContent />
+    </Suspense>
   );
 }

@@ -12,9 +12,10 @@ export const getJobById = async (jobId) => {
 };
 
 
-export const getCompanyJobs = async (companyId, status = "active") => {
-  const res = await fetch(
-    `${baseURL}/api/jobs?companyId=${companyId}&status=${status}`,
-  );
+export const getCompanyJobs = async (companyId, status) => {
+  const url = status
+    ? `${baseURL}/api/jobs?companyId=${companyId}&status=${status}`
+    : `${baseURL}/api/jobs?companyId=${companyId}`;
+  const res = await fetch(url);
   return res.json();
 };

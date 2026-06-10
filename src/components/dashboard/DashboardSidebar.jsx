@@ -1,3 +1,4 @@
+import { getUserSession } from "@/lib/core/session";
 import {
   LayoutSideContentLeft,
   Bell,
@@ -11,8 +12,9 @@ import {
 import { Button, Drawer } from "@heroui/react";
 import Link from "next/link";
 
-const DashboardSidebar = () => {
-  const navItems = [
+const DashboardSidebar = async () => {
+  const user = await getUserSession();
+  const recruiterNavLinks = [
     { icon: House, href: "/dashboard/recruiter", label: "Home" },
     { icon: Magnifier, href: "/dashboard/recruiter/jobs", label: "Jobs" },
     { icon: Bell, href: "/dashboard/recruiter/jobs/new", label: "Post A Job" },
@@ -21,6 +23,24 @@ const DashboardSidebar = () => {
     { icon: Person, href: "/dashboard", label: "Profile" },
     { icon: Gear, href: "/dashboard", label: "Settings" },
   ];
+
+
+  const seekerNavLinks = [
+  { icon: House, href: "/dashboard/candidate", label: "Dashboard" },
+  { icon: Magnifier, href: "/dashboard/candidate/jobs", label: "Find Jobs" },
+  { icon: Briefcase, href: "/dashboard/candidate/applications", label: "My Applications" },
+  { icon: Person, href: "/dashboard/candidate/profile", label: "My Profile" },
+  { icon: Gear, href: "/dashboard/candidate/settings", label: "Settings" },
+];
+
+const navLinksMap = {
+  seeker: seekerNavLinks,
+  recruiter: recruiterNavLinks
+}
+
+
+const navItems = navLinksMap[user?.role || 'seeker'];
+
   const navContent = (
     <nav className="flex flex-col gap-1">
       {navItems.map((item) => (

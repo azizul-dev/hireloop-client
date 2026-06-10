@@ -2,27 +2,31 @@
 
 import { useState } from "react";
 import { Button, Link } from "@heroui/react";
-import { signOut, useSession,} from "@/lib/auth-client";
+import { signOut, useSession } from "@/lib/auth-client";
 
-const links = [
-  {
-    name: "Browse Jobs",
-    href: "/jobs",
-  },
-  {
-    name: "Companies",
-    href: "/companies",
-  },
-  {
-    name: "Pricing",
-    href: "/pricing",
-  },
+const baseLinks = [
+  { name: "Browse Jobs", href: "/jobs" },
+  { name: "Companies", href: "/companies" },
+  { name: "Pricing", href: "/pricing" },
 ];
+
+const dashboardLinks = {
+  seeker: "/dashboard/seeker",
+  recruiter: "/dashboard/recruiter",
+};
 
 const NavBar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: session } = useSession();
   const user = session?.user;
+
+  // ← আলাদা variable, baseLinks কে mutate করছে না
+  const links = user?.email
+    ? [
+        ...baseLinks,
+        { name: "Dashboard", href: dashboardLinks[user?.role || "seeker"] },
+      ]
+    : baseLinks;
 
   const handleSignOut = async () => {
     await signOut();
@@ -38,20 +42,20 @@ const NavBar = () => {
               <path d="M8 5v14l11-7z" />
             </svg>
           </div>
-
           <div className="flex flex-col leading-tight">
             <span className="text-[13px] font-bold text-white">
-              <h1 className=" text-lg font-bold">Hire Loop</h1>
+              <h1 className="text-lg font-bold">Hire Loop</h1>
             </span>
           </div>
         </Link>
 
         {/* Right Side */}
         <div className="ml-auto hidden items-center gap-6 md:flex">
-          {/* Desktop Nav Links */}
           <ul className="flex items-center gap-1 rounded-xl border border-white/[0.08] bg-white/[0.05] px-2 py-1.5 list-none">
             {links.map((link) => (
               <li key={link.name}>
+                {" "}
+                {/* ← এখন সব link এ name আছে */}
                 <Link
                   href={link.href}
                   className="block rounded-lg px-4 py-1.5 text-sm font-medium text-white/75 no-underline transition hover:bg-white/[0.08] hover:text-white"
@@ -62,7 +66,6 @@ const NavBar = () => {
             ))}
           </ul>
           <div className="h-8 w-px bg-white/20" />
-          {/* Desktop Actions */}
           <div className="flex items-center gap-1">
             {user ? (
               <>
@@ -79,7 +82,6 @@ const NavBar = () => {
                 Sign In
               </Link>
             )}
-
             <Button
               className="rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/90"
               size="sm"
@@ -134,7 +136,6 @@ const NavBar = () => {
                 </Link>
               </li>
             ))}
-
             <li className="mt-3 flex flex-col gap-2 border-t border-white/[0.08] pt-3">
               {user ? (
                 <>
@@ -158,7 +159,6 @@ const NavBar = () => {
                   >
                     Sign In
                   </Link>
-
                   <Button
                     className="w-full rounded-lg bg-white text-sm font-semibold text-black hover:bg-white/90"
                     size="sm"

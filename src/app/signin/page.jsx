@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense } from "react";
 
 import { Card, Input, Button } from "@heroui/react";
 import { ArrowLeft } from "lucide-react";
@@ -10,7 +11,7 @@ import { toast } from "sonner";
 
 import { authClient } from "@/lib/auth-client";
 
-export default function SigninPage() {
+function SigninPageContent() {
   const router = useRouter();
 
   const searchParams = useSearchParams();
@@ -127,5 +128,13 @@ export default function SigninPage() {
         </div>
       </Card>
     </div>
+  );
+}
+
+export default function SigninPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SigninPageContent />
+    </Suspense>
   );
 }

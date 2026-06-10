@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useSession } from "@/lib/auth-client";
 import {
   Form,
   Fieldset,
@@ -17,9 +18,10 @@ import {
 
 import { Briefcase, MapPin, Calendar } from "@gravity-ui/icons";
 import { createJob } from "@/lib/actions/jobs";
-import { redirect } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function PostJobForm({ company }) {
+  const router = useRouter();
   const mockCompany = company || {
     id: "comp_98723",
     name: "Acme Corp",
@@ -31,6 +33,7 @@ export default function PostJobForm({ company }) {
   const [category, setCategory] = useState("");
   const [jobType, setJobType] = useState("");
   const [currency, setCurrency] = useState("USD");
+  const { data: session } = useSession();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -45,9 +48,10 @@ export default function PostJobForm({ company }) {
       type: jobType,
       currency,
       isRemote,
-      companyId: mockCompany._id,
+      companyId: mockCompany._id || mockCompany.id,
       companyName: mockCompany.name,
       companyLogo: mockCompany.logo || null,
+      recruiterId: session?.user?.id || null,
       status: "active",
       createdAt: new Date().toISOString(),
     };
@@ -58,7 +62,7 @@ export default function PostJobForm({ company }) {
         toast.success("Job posted successfully!");
         e.target.reset();
         setIsRemote(false);
-        redirect(`/dashboard/recruiter`);
+        router.push(`/dashboard/recruiter`);
       } else {
         toast.error("Failed to post job. Please try again.");
       }
