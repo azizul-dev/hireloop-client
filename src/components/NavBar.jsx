@@ -13,6 +13,7 @@ const baseLinks = [
 const dashboardLinks = {
   seeker: "/dashboard/seeker",
   recruiter: "/dashboard/recruiter",
+  admin: '/dashboard/admin',
 };
 
 const NavBar = () => {

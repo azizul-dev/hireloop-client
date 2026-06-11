@@ -29,7 +29,7 @@ export default function UnauthorizedPage() {
 
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
           <Link
-            href="/"
+            href="/signin"
             className="inline-flex items-center justify-center gap-2 rounded-xl bg-white px-6 py-3 font-medium text-black"
           >
             <Home size={18} />

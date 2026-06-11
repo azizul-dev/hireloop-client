@@ -10,6 +10,7 @@ import {
   Person,
 } from "@gravity-ui/icons";
 import { Button, Drawer } from "@heroui/react";
+import { Building, Users } from "lucide-react";
 import Link from "next/link";
 
 const DashboardSidebar = async () => {
@@ -33,9 +34,18 @@ const DashboardSidebar = async () => {
   { icon: Gear, href: "/dashboard/candidate/settings", label: "Settings" },
 ];
 
+const adminNavLinks = [
+  { icon: House, href: "/dashboard/admin", label: "Dashboard" },
+  { icon: Building, href: "/dashboard/admin/companies", label: "Manage Companies" },
+  { icon: Briefcase, href: "/dashboard/admin/jobs", label: "All Jobs" },
+  { icon: Users, href: "/dashboard/admin/users", label: "Users & Applications" },
+  { icon: Gear, href: "/dashboard/admin/settings", label: "Settings" },
+];
+
 const navLinksMap = {
   seeker: seekerNavLinks,
-  recruiter: recruiterNavLinks
+  recruiter: recruiterNavLinks,
+  admin: adminNavLinks,
 }
 
 
