@@ -1,8 +1,18 @@
 "use client";
 
-import { Table } from "@heroui/react";
+import { updateCompany } from "@/lib/actions/companies";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  TableRow,
+} from "@heroui/react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { toast } from "sonner";
 
 const chipStyle = {
   Approved: { background: "#EAF3DE", color: "#27500A" },
@@ -42,29 +52,24 @@ const StatusBadge = ({ status }) => {
 };
 
 export default function CompaniesTable({ companies: initial }) {
+  const router = useRouter();
   const [companies, setCompanies] = useState(initial);
   const [loading, setLoading] = useState(null);
 
   const handleApprove = async (id) => {
-    // setLoading(id + "Approved");
-    // await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/companies/${id}/status`, {
-    //   method: "PATCH",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ status: "Approved" }),
-    // });
-    // setCompanies((prev) => prev.map((c) => (c._id === id ? { ...c, status: "Approved" } : c)));
-    // setLoading(null);
+    const result = await updateCompany(id, { status: "Approved" });
+    if (result.modifiedCount) {
+      toast.success("Company approved successfully");
+      router.refresh();
+    }
   };
 
   const handleReject = async (id) => {
-    // setLoading(id + "Rejected");
-    // await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/api/companies/${id}/status`, {
-    //   method: "PATCH",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: JSON.stringify({ status: "Rejected" }),
-    // });
-    // setCompanies((prev) => prev.map((c) => (c._id === id ? { ...c, status: "Rejected" } : c)));
-    // setLoading(null);
+    const result = await updateCompany(id, { status: "Rejected" });
+    if (result.modifiedCount) {
+      toast.error("Company rejected");
+      router.refresh();
+    }
   };
 
   const ActionButtons = ({ id, status }) => (
@@ -128,13 +133,12 @@ export default function CompaniesTable({ companies: initial }) {
           </div>
         ))}
       </div>
-
       {/* Mobile */}
       <div className="flex flex-col gap-3 md:hidden">
         {companies.map((c) => (
           <div
             key={c._id}
-            className="rounded-2xl border border-default-100 bg-white dark:bg-default-50 p-4 flex flex-col gap-3 shadow-sm"
+            className="rounded-2xl border border-default-100  dark:bg-default-50 p-4 flex flex-col gap-3 shadow-sm"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3 min-w-0">
@@ -167,6 +171,12 @@ export default function CompaniesTable({ companies: initial }) {
                   {c.employeeCount || "—"}
                 </p>
               </div>
+              <div>
+                <p className="text-[11px] text-default-400 mb-0.5">Jobs</p>
+                <p className="text-xs font-medium text-default-700">
+                  {c.jobCount ?? 0}
+                </p>
+              </div>
               {c.websiteUrl && (
                 <div className="col-span-2">
                   <p className="text-[11px] text-default-400 mb-0.5">Website</p>
@@ -185,70 +195,72 @@ export default function CompaniesTable({ companies: initial }) {
 
       {/* Desktop */}
       <div className="hidden md:block rounded-2xl border border-default-100 overflow-hidden shadow-sm">
-        <div className="px-5 py-4 border-b border-default-100 flex items-center justify-between dark:bg-default-50">
-          <div>
-            <h2 className="text-base font-semibold">Company approvals</h2>
-            <p className="text-xs text-default-400 mt-0.5">
-              {companies.length} total companies
-            </p>
-          </div>
+        <div className="px-5 py-4 border-b border-default-100">
+          <h2 className="text-base font-semibold">Company approvals</h2>
+          <p className="text-xs text-default-400 mt-0.5">
+            {companies.length} total companies
+          </p>
         </div>
-        <Table>
-          <Table.ScrollContainer>
-            <Table.Content aria-label="Company approvals">
-              <Table.Header>
-                <Table.Column isRowHeader>COMPANY</Table.Column>
-                <Table.Column>INDUSTRY</Table.Column>
-                <Table.Column>LOCATION</Table.Column>
-                <Table.Column>SIZE</Table.Column>
-                <Table.Column>STATUS</Table.Column>
-                <Table.Column>ACTIONS</Table.Column>
-              </Table.Header>
-              <Table.Body>
-                {companies.map((c) => (
-                  <Table.Row key={c._id}>
-                    <Table.Cell>
-                      <div className="flex items-center gap-3">
-                        <Image
-                          src={c.logo || "/placeholder.png"}
-                          alt={c.name}
-                          width={36}
-                          height={36}
-                          className="object-cover rounded-lg border border-default-100"
-                        />
-                        <div>
-                          <p className="font-semibold text-sm">{c.name}</p>
-                          {c.websiteUrl && (
-                            <p className="text-xs text-default-400 truncate max-w-[120px]">
-                              {c.websiteUrl}
-                            </p>
-                          )}
-                        </div>
+
+        <div className="overflow-x-auto">
+          <table className="w-full">
+            <thead>
+              <tr className="border-b ">
+                <th className="text-left p-4">Company</th>
+                <th className="text-left p-4">Industry</th>
+                <th className="text-left p-4">Location</th>
+                <th className="text-left p-4">Size</th>
+                <th className="text-left p-4">Jobs</th>
+                <th className="text-left p-4">Status</th>
+                <th className="text-left p-4">Actions</th>
+              </tr>
+            </thead>
+
+            <tbody>
+              {companies.map((c) => (
+                <tr key={c._id} className="border-b">
+                  <td className="p-4">
+                    <div className="flex items-center gap-3">
+                      <Image
+                        src={c.logo || "/placeholder.png"}
+                        alt={c.name}
+                        width={36}
+                        height={36}
+                        className="rounded-lg border"
+                      />
+
+                      <div>
+                        <p className="font-semibold text-sm">{c.name}</p>
+
+                        {c.websiteUrl && (
+                          <p className="text-xs text-gray-500 truncate max-w-[150px]">
+                            {c.websiteUrl}
+                          </p>
+                        )}
                       </div>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-sm">{c.industry || "—"}</span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-sm">{c.location || "—"}</span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <span className="text-xs text-default-500">
-                        {c.employeeCount || "—"}
-                      </span>
-                    </Table.Cell>
-                    <Table.Cell>
-                      <StatusBadge status={c.status} />
-                    </Table.Cell>
-                    <Table.Cell>
-                      <ActionButtons id={c._id} status={c.status} />
-                    </Table.Cell>
-                  </Table.Row>
-                ))}
-              </Table.Body>
-            </Table.Content>
-          </Table.ScrollContainer>
-        </Table>
+                    </div>
+                  </td>
+
+                  <td className="p-4">{c.industry || "—"}</td>
+
+                  <td className="p-4">{c.location || "—"}</td>
+
+                  <td className="p-4">{c.employeeCount || "—"}</td>
+
+                  <td className="p-4 font-medium">{c.jobCount ?? 0}</td>
+
+                  <td className="p-4">
+                    <StatusBadge status={c.status} />
+                  </td>
+
+                  <td className="p-4">
+                    <ActionButtons id={c._id} status={c.status} />
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   );
