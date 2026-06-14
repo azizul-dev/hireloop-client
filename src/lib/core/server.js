@@ -15,7 +15,7 @@ export const authHeader = async () => {
 
 export const serverFetch = async (path) => {
   const res = await fetch(`${baseUrl}${path}`);
-  return res.json();
+  return handleStatusCode(res);
 };
 
 export const protectedFetch = async (path) => {
@@ -23,7 +23,7 @@ export const protectedFetch = async (path) => {
     headers: await authHeader(),
   });
 
-  return res.json();
+  return handleStatusCode(res);
 };
 
 export const serverMutation = async (path, data, method = "POST") => {
