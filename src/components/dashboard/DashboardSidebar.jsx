@@ -56,7 +56,7 @@ const navItems = navLinksMap[user?.role || 'seeker'];
       {navItems.map((item) => (
         <Link
           key={item.label}
-          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default"
+          className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm text-foreground transition-colors hover:bg-default cursor-pointer"
           href={item.href}
         >
           <item.icon className="size-5 text-muted" />
@@ -84,12 +84,9 @@ const navItems = navLinksMap[user?.role || 'seeker'];
       <div className="flex h-16 w-full items-center justify-between border-b border-white/[0.08] bg-[#111118] px-6 lg:hidden">
         <div className="flex items-center gap-3">
           <Drawer>
-            <Button
-              className="p-0 min-w-0 h-9 w-9 bg-transparent hover:bg-white/[0.08] border border-white/[0.08] rounded-lg text-white"
-              variant="secondary"
-            >
+            <Drawer.Trigger className="p-0 min-w-0 h-9 w-9 bg-transparent hover:bg-white/[0.08] border border-white/[0.08] rounded-lg text-white cursor-pointer flex items-center justify-center">
               <LayoutSideContentLeft className="size-5" />
-            </Button>
+            </Drawer.Trigger>
             <Drawer.Backdrop>
               <Drawer.Content placement="left">
                 <Drawer.Dialog className="bg-[#111118] text-white p-6 h-full w-80 border-r border-white/[0.08]">

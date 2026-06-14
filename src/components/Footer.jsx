@@ -24,7 +24,7 @@ const Footer = () => {
                   Hire Loop
                 </h2>
                 <p className="text-xs text-gray-500 mt-1">
-                  Smart Inventory System
+                  Smart Career Network
                 </p>
               </div>
             </div>

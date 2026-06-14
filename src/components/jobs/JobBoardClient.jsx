@@ -166,7 +166,7 @@ export default function JobBoardClient({ initialJobs = [] }) {
           onClick={handleReset}
           variant="light"
           startContent={<ArrowRotateLeft className="w-4 h-4" />}
-          className="text-neutral-400 hover:text-white text-sm min-h-[40px] px-4 font-medium transition-colors"
+          className="text-neutral-400 hover:text-white text-sm min-h-[40px] px-4 font-medium transition-colors cursor-pointer"
         >
           Reset
         </Button>

@@ -22,7 +22,7 @@ import {
   ShieldCheck,
   ShieldExclamation,
 } from "@gravity-ui/icons";
-import { createCompany } from "@/lib/actions/companies";
+import { createCompany, updateCompany } from "@/lib/actions/companies";
 
 export default function CompanyProfile({ recruiter, recruiterCompany }) {
   const [viewState, setViewState] = useState(
@@ -40,6 +40,7 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
   const [logoUrl, setLogoUrl] = useState(recruiterCompany?.logo || "");
 
   const [companyData, setCompanyData] = useState({
+    _id: recruiterCompany?._id || "",
     name: recruiterCompany?.name || "",
     industry: recruiterCompany?.industry || "",
     websiteUrl: recruiterCompany?.websiteUrl || "",
@@ -95,18 +96,30 @@ export default function CompanyProfile({ recruiter, recruiterCompany }) {
       employeeCount: employeeCount,
       logo:
         logoUrl || companyData.logo || "https://placehold.co/100x100?text=Logo",
-      status: companyData.status || "Pending",
+      status: (companyData.status === "Approved") ? "Approved" : "Pending",
       recruiterId: recruiter.id,
     };
 
     try {
-      // ✅ createCompany এখন শুধুমাত্র submit-এ call হচ্ছে
-      const payload = await createCompany(updatedPayload);
+      let payload;
+      if (companyData._id) {
+        payload = await updateCompany(companyData._id, updatedPayload);
+      } else {
+        payload = await createCompany(updatedPayload);
+      }
 
-      // ✅ MongoDB insertOne সফল হলে insertedId অথবা acknowledged থাকে
-      if (payload?.insertedId || payload?.acknowledged) {
+      // Server returned an error (e.g. duplicate company for this recruiter)
+      if (payload?.error) {
+        toast.error(payload.error);
+        return;
+      }
+
+      if (payload?.insertedId || payload?.acknowledged || payload?.modifiedCount) {
         toast.success("Company profile saved successfully!");
-        setCompanyData(updatedPayload);
+        setCompanyData({
+          ...updatedPayload,
+          _id: payload.insertedId || companyData._id,
+        });
         setViewState("view");
       } else {
         toast.error("Something went wrong. Please try again.");

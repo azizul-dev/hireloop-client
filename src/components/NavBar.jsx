@@ -70,21 +70,23 @@ const NavBar = () => {
           <div className="flex items-center gap-1">
             {user ? (
               <>
-                Hi, {user.name}!
-                <Button onClick={handleSignOut} variant="ghost">
-                  SignOut
+                <span className="text-sm font-medium text-white/80 mr-2">
+                  Hi, {user.name}!
+                </span>
+                <Button onClick={handleSignOut} variant="ghost" className="cursor-pointer">
+                  Sign Out
                 </Button>
               </>
             ) : (
               <Link
                 href="/signin"
-                className="rounded-lg px-5 py-2 text-sm font-semibold text-violet-500 no-underline transition hover:bg-violet-500/10"
+                className="rounded-lg px-5 py-2 text-sm font-semibold text-violet-500 no-underline transition hover:bg-violet-500/10 cursor-pointer"
               >
                 Sign In
               </Link>
             )}
             <Button
-              className="rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/90"
+              className="rounded-lg bg-white px-5 py-2 text-sm font-semibold text-black hover:bg-white/90 cursor-pointer"
               size="sm"
             >
               Get Started
@@ -146,7 +148,7 @@ const NavBar = () => {
                   <Button
                     onClick={handleSignOut}
                     variant="ghost"
-                    className="w-full rounded-lg text-sm font-semibold border-white/[0.08] text-white hover:bg-white/[0.08]"
+                    className="w-full rounded-lg text-sm font-semibold border-white/[0.08] text-white hover:bg-white/[0.08] cursor-pointer"
                     size="sm"
                   >
                     Sign Out

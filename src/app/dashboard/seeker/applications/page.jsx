@@ -29,7 +29,78 @@ const Page = async () => {
         <p className="text-sm text-foreground-400">{jobs.length} total applications</p>
       </div>
 
-      <div className="rounded-xl border border-white/[0.08] overflow-hidden">
+      {/* Mobile Card List View */}
+      <div className="flex flex-col gap-3 md:hidden">
+        {jobs.length === 0 ? (
+          <div className="text-center py-12 text-foreground-400 border border-white/[0.08] rounded-2xl bg-[#121214]">
+            No applications found.
+          </div>
+        ) : (
+          jobs.map((job) => (
+            <div
+              key={job.id}
+              className="rounded-2xl border border-white/[0.08] bg-[#121214] p-4 flex flex-col gap-3 shadow-sm hover:bg-white/[0.02] transition-colors"
+            >
+              <div className="flex items-start justify-between gap-2">
+                <div>
+                  <h3 className="font-semibold text-white text-sm">{job.jobTitle}</h3>
+                  <p className="text-xs text-foreground-400 mt-0.5">{job.location}</p>
+                </div>
+                <Chip
+                  size="sm"
+                  variant="flat"
+                  color={statusMap[job.status]?.color ?? "default"}
+                >
+                  {statusMap[job.status]?.label ?? job.status}
+                </Chip>
+              </div>
+
+              <div className="grid grid-cols-2 gap-2 rounded-xl bg-white/[0.03] p-3 text-xs">
+                <div>
+                  <p className="text-[11px] text-foreground-400 mb-0.5">Company</p>
+                  <div className="flex items-center gap-1.5 min-w-0">
+                    <div className="h-5 w-5 rounded bg-violet-700/20 flex items-center justify-center text-violet-400 text-[10px] font-medium shrink-0">
+                      {job.companyName?.slice(0, 2).toUpperCase()}
+                    </div>
+                    <span className="text-white truncate">{job.companyName}</span>
+                  </div>
+                </div>
+                <div>
+                  <p className="text-[11px] text-foreground-400 mb-0.5">Job Type</p>
+                  <p className="font-medium text-white">{job.jobType ?? "—"}</p>
+                </div>
+                <div className="col-span-2">
+                  <p className="text-[11px] text-foreground-400 mb-0.5">Applied on</p>
+                  <p className="font-medium text-white">
+                    {job.createdAt
+                      ? new Date(job.createdAt).toLocaleDateString("en-GB", {
+                          day: "2-digit",
+                          month: "short",
+                          year: "numeric",
+                        })
+                      : "—"}
+                  </p>
+                </div>
+              </div>
+
+              <div className="pt-1">
+                <Button
+                  size="sm"
+                  variant="flat"
+                  as="a"
+                  href={`/dashboard/seeker/applications/${job.id}`}
+                  className="w-full text-center"
+                >
+                  Details
+                </Button>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden md:block rounded-xl border border-white/[0.08] overflow-hidden">
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b border-white/[0.08] bg-white/[0.04]">

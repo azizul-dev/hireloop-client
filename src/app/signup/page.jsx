@@ -135,26 +135,24 @@ function SignupPageContent() {
             variant="bordered"
           />
 
-          <div className="relative">
-            <Input
-              label="Password"
-              placeholder="Enter password"
-              name="password"
-              value={formData.password}
-              onChange={handleChange}
-              variant="bordered"
-              type={showPassword ? "text" : "password"}
-              className="pr-12"
-            />
-
-            <button
-              type="button"
-              onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 z-10"
-            >
-              {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-            </button>
-          </div>
+          <Input
+            label="Password"
+            placeholder="Enter password"
+            name="password"
+            value={formData.password}
+            onChange={handleChange}
+            variant="bordered"
+            type={showPassword ? "text" : "password"}
+            endContent={
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                className="focus:outline-none cursor-pointer text-zinc-400 hover:text-zinc-200 flex items-center justify-center h-full"
+              >
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+              </button>
+            }
+          />
 
           <div className="flex flex-col gap-4">
             <Label>Subscription plan</Label>

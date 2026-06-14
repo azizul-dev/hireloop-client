@@ -210,7 +210,7 @@ function FAQItem({ faq }) {
     <div className="border border-neutral-800 rounded-xl overflow-hidden">
       <button
         onClick={() => setOpen(!open)}
-        className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium text-white hover:bg-neutral-900 transition-colors"
+        className="w-full flex items-center justify-between px-5 py-4 text-left text-sm font-medium text-white hover:bg-neutral-900 transition-colors cursor-pointer"
       >
         {faq.question}
         {open ? (

@@ -1,17 +1,9 @@
 "use client";
 
 import { updateCompany } from "@/lib/actions/companies";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@heroui/react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "sonner";
 
 const chipStyle = {
@@ -56,36 +48,66 @@ export default function CompaniesTable({ companies: initial }) {
   const [companies, setCompanies] = useState(initial);
   const [loading, setLoading] = useState(null);
 
+  useEffect(() => {
+    setCompanies(initial);
+  }, [initial]);
+
   const handleApprove = async (id) => {
-    const result = await updateCompany(id, { status: "Approved" });
-    if (result.modifiedCount) {
-      toast.success("Company approved successfully");
-      router.refresh();
+    setLoading(id + "Approved");
+    try {
+      const result = await updateCompany(id, { status: "Approved" });
+      if (result.acknowledged || result.modifiedCount) {
+        toast.success("Company approved successfully");
+        setCompanies((prev) =>
+          prev.map((c) => (c._id === id ? { ...c, status: "Approved" } : c))
+        );
+        router.refresh();
+      } else {
+        toast.error("Failed to approve company");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred");
+    } finally {
+      setLoading(null);
     }
   };
 
   const handleReject = async (id) => {
-    const result = await updateCompany(id, { status: "Rejected" });
-    if (result.modifiedCount) {
-      toast.error("Company rejected");
-      router.refresh();
+    setLoading(id + "Rejected");
+    try {
+      const result = await updateCompany(id, { status: "Rejected" });
+      if (result.acknowledged || result.modifiedCount) {
+        toast.error("Company rejected");
+        setCompanies((prev) =>
+          prev.map((c) => (c._id === id ? { ...c, status: "Rejected" } : c))
+        );
+        router.refresh();
+      } else {
+        toast.error("Failed to reject company");
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("An error occurred");
+    } finally {
+      setLoading(null);
     }
   };
 
   const ActionButtons = ({ id, status }) => (
     <div className="flex gap-2">
       <button
-        disabled={status !== "Pending" || !!loading}
+        disabled={status === "Approved" || !!loading}
         onClick={() => handleApprove(id)}
-        className="px-3 py-1.5 text-xs rounded-lg font-semibold transition-all disabled:opacity-40 hover:scale-105 active:scale-95"
+        className="px-3 py-1.5 text-xs rounded-lg font-semibold transition-all disabled:opacity-40 hover:scale-105 active:scale-95 cursor-pointer"
         style={{ background: "#EAF3DE", color: "#27500A" }}
       >
         {loading === id + "Approved" ? "..." : "✓ Approve"}
       </button>
       <button
-        disabled={status !== "Pending" || !!loading}
+        disabled={status === "Rejected" || !!loading}
         onClick={() => handleReject(id)}
-        className="px-3 py-1.5 text-xs rounded-lg font-semibold transition-all disabled:opacity-40 hover:scale-105 active:scale-95"
+        className="px-3 py-1.5 text-xs rounded-lg font-semibold transition-all disabled:opacity-40 hover:scale-105 active:scale-95 cursor-pointer"
         style={{ background: "#FCEBEB", color: "#791F1F" }}
       >
         {loading === id + "Rejected" ? "..." : "✕ Reject"}
