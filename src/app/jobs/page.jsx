@@ -1,10 +1,18 @@
-
 import JobBoardClient from "@/components/jobs/JobBoardClient";
 import { getJobs } from "@/lib/api/jobs";
 
-export default async function Page() {
-  // Fetch from the database on the server side
-  const jobs = await getJobs();
+export default async function Page({ searchParams }) {
+  const filters = await searchParams;
+
+  const filterObj = {
+    ...filters,
+    isRemote: filters.isRemote === "true" ? true : false,
+  };
+
+  const querySearch = new URLSearchParams(filterObj)
+  const queryString = querySearch.toString()
+
+  const jobs = await getJobs(queryString);
   console.log("JOBS DATA:", JSON.stringify(jobs?.slice(0, 2), null, 2));
 
   return (
@@ -19,7 +27,7 @@ export default async function Page() {
       </div>
 
       {/* Render the core filtering component */}
-      <JobBoardClient Jobs={jobs || []} />
+      <JobBoardClient filters={filterObj} Jobs={jobs || []} />
     </div>
   );
 }

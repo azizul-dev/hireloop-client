@@ -18,11 +18,11 @@ import {
 import JobCard from "./JobCard";
 import { useRouter } from "next/navigation";
 
-export default function JobBoardClient({ Jobs }) {
+export default function JobBoardClient({ Jobs, filters }) {
   // 1. Pristine Filter States managed via strings
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedType, setSelectedType] = useState("all");
-  const [workplace, setWorkplace] = useState("all");
+  const [searchQuery, setSearchQuery] = useState(filters.search);
+  const [selectedType, setSelectedType] = useState(filters.jobType || "all");
+  const [workplace, setWorkplace] = useState(filters.isRemote || "all");
 
   const router = useRouter();
 
