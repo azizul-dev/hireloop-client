@@ -19,7 +19,7 @@ export default async function Page() {
       </div>
 
       {/* Render the core filtering component */}
-      <JobBoardClient initialJobs={jobs || []} />
+      <JobBoardClient Jobs={jobs || []} />
     </div>
   );
 }

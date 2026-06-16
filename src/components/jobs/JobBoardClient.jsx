@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import {
   TextField,
   InputGroup,
@@ -16,57 +16,76 @@ import {
   ArrowRotateLeft,
 } from "@gravity-ui/icons";
 import JobCard from "./JobCard";
+import { useRouter } from "next/navigation";
 
-export default function JobBoardClient({ initialJobs = [] }) {
+export default function JobBoardClient({ Jobs }) {
   // 1. Pristine Filter States managed via strings
   const [searchQuery, setSearchQuery] = useState("");
-  const [jobType, setJobType] = useState("all");
+  const [selectedType, setSelectedType] = useState("all");
   const [workplace, setWorkplace] = useState("all");
+
+  const router = useRouter();
+
+  useEffect(() => {
+    const sp = new URLSearchParams();
+
+    if (searchQuery) {
+      sp.set("search", searchQuery);
+    }
+    if (selectedType !== "all") {
+      sp.set("jobType", selectedType);
+    }
+    if (workplace !== "all") {
+      sp.set("isRemote", workplace);
+    }
+    console.log("search", sp.toString());
+
+    const path = `?${sp.toString()}`;
+    router.push(path);
+  }, [router, searchQuery, selectedType, workplace]);
 
   // Hardcoded options matching your UI design labels
   const filterTypeOptions = ["all", "Full-time", "Part-time", "Internship"];
 
   // 2. Strict Filter Engine
-  const filteredJobs = useMemo(() => {
-    const cleanSearch = searchQuery.trim().toLowerCase();
+  // const jobs = useMemo(() => {
+  //   const cleanSearch = searchQuery.trim().toLowerCase();
 
-    return initialJobs.filter((job) => {
-      // Search Bar match (Checks safely against null fields)
-      const matchesSearch =
-        !cleanSearch ||
-        job.title?.toLowerCase().includes(cleanSearch) ||
-        job.companyName?.toLowerCase().includes(cleanSearch) ||
-        job.category?.toLowerCase().includes(cleanSearch);
+  //   return Jobs.filter((job) => {
+  //     // Search Bar match (Checks safely against null fields)
+  //     const matchesSearch =
+  //       !cleanSearch ||
+  //       job.title?.toLowerCase().includes(cleanSearch) ||
+  //       job.companyName?.toLowerCase().includes(cleanSearch) ||
+  //       job.category?.toLowerCase().includes(cleanSearch);
 
-      // Job Type match
-      const matchesType =
-        jobType === "all" ||
-        job.type?.toLowerCase() === jobType.toLowerCase();
+  //     // Job Type match
+  //     const matchesType =
+  //       jobType === "all" ||
+  //       job.type?.toLowerCase() === jobType.toLowerCase();
 
-      // Workplace match (job.isRemote field logic verification)
-      let matchesWorkplace = true;
-      if (workplace === "remote") {
-        matchesWorkplace = job.isRemote === true;
-      } else if (workplace === "on-site") {
-        matchesWorkplace = job.isRemote === false;
-      }
+  //     // Workplace match (job.isRemote field logic verification)
+  //     let matchesWorkplace = true;
+  //     if (workplace === "remote") {
+  //       matchesWorkplace = job.isRemote === true;
+  //     } else if (workplace === "on-site") {
+  //       matchesWorkplace = job.isRemote === false;
+  //     }
 
-      return matchesSearch && matchesType && matchesWorkplace;
-    });
-  }, [searchQuery, jobType, workplace, initialJobs]);
+  //     return matchesSearch && matchesType && matchesWorkplace;
+  //   });
+  // }, [searchQuery, jobType, workplace, Jobs]);
 
   const handleReset = () => {
     setSearchQuery("");
-    setJobType("all");
+    setSelectedType("all");
     setWorkplace("all");
   };
 
   return (
     <div className="max-w-7xl w-full mx-auto px-2">
-
       {/* FILTER CONTROLS BAR */}
       <div className="flex flex-col md:flex-row gap-4 items-end justify-between bg-[#121214] border border-neutral-800 p-6 rounded-2xl mb-8">
-
         {/* Search Input Field (Fixed with value & onChange bound to Native Input element) */}
         <div className="w-full md:max-w-xs">
           <TextField>
@@ -89,7 +108,10 @@ export default function JobBoardClient({ initialJobs = [] }) {
 
         {/* Job Type Dropdown */}
         <div className="w-full md:max-w-[200px]">
-          <Select selectedKey={jobType} onSelectionChange={(key) => setJobType(String(key))}>
+          <Select
+            selectedKey={selectedType}
+            onSelectionChange={(key) => setSelectedType(String(key))}
+          >
             <Label className="text-xs font-semibold text-neutral-400 mb-1.5 block">
               Job Type
             </Label>
@@ -98,7 +120,9 @@ export default function JobBoardClient({ initialJobs = [] }) {
                 <Briefcase className="w-4 h-4 text-neutral-500" />
                 <Select.Value />
               </div>
-              <Select.Indicator className="text-neutral-500 text-xs">▼</Select.Indicator>
+              <Select.Indicator className="text-neutral-500 text-xs">
+                ▼
+              </Select.Indicator>
             </Select.Trigger>
             <Select.Popover className="bg-[#121214] border border-neutral-800 rounded-xl shadow-xl mt-1 overflow-hidden z-50 min-w-[200px]">
               <ListBox aria-label="Job Type filter selection">
@@ -119,7 +143,10 @@ export default function JobBoardClient({ initialJobs = [] }) {
 
         {/* Workplace Setup Dropdown */}
         <div className="w-full md:max-w-[200px]">
-          <Select selectedKey={workplace} onSelectionChange={(key) => setWorkplace(String(key))}>
+          <Select
+            selectedKey={workplace}
+            onSelectionChange={(key) => setWorkplace(String(key))}
+          >
             <Label className="text-xs font-semibold text-neutral-400 mb-1.5 block">
               Workplace
             </Label>
@@ -128,7 +155,9 @@ export default function JobBoardClient({ initialJobs = [] }) {
                 <Globe className="w-4 h-4 text-neutral-500" />
                 <Select.Value />
               </div>
-              <Select.Indicator className="text-neutral-500 text-xs">▼</Select.Indicator>
+              <Select.Indicator className="text-neutral-500 text-xs">
+                ▼
+              </Select.Indicator>
             </Select.Trigger>
             <Select.Popover className="bg-[#121214] border border-neutral-800 rounded-xl shadow-xl mt-1 overflow-hidden z-50 min-w-[200px]">
               <ListBox aria-label="Workplace layout filter selection">
@@ -174,13 +203,13 @@ export default function JobBoardClient({ initialJobs = [] }) {
 
       {/* JOBS GRID DISPLAY */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredJobs.map((job) => (
+        {Jobs.map((job) => (
           <JobCard key={job._id?.$oid || job._id} job={job} />
         ))}
       </div>
 
       {/* Empty State Fallback Layout */}
-      {filteredJobs.length === 0 && (
+      {Jobs.length === 0 && (
         <div className="text-center py-16 border border-dashed border-neutral-800 rounded-2xl">
           <p className="text-neutral-500 text-sm">
             No positions match your selected criteria.
