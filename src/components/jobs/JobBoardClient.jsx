@@ -31,12 +31,20 @@ export default function JobBoardClient({ Jobs, filters }) {
         : "all",
   );
 
+  const [page, setPage] = useState(filters.page || 1);
   const router = useRouter();
 
-  const [page, setPage] = useState(1);
-  const totalItems =  Jobs.length;
-  const itemsPerPage = 10;
-  const totalPages = Math.ceil(totalItems/itemsPerPage);
+  const totalItems = Jobs.length;
+  const itemsPerPage = 12;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const getPageNumbers = () => {
+    const pages = [1, 2, 3, 4, 5, 6, 7, 8];
+    return pages;
+  };
+
+  const startItem = 1;
+  const endItem = totalItems;
 
   useEffect(() => {
     const sp = new URLSearchParams();
@@ -50,7 +58,10 @@ export default function JobBoardClient({ Jobs, filters }) {
     if (workplace !== "all") {
       sp.set("isRemote", workplace);
     }
-    console.log("search", sp.toString());
+
+    if (page) {
+      sp.set("page", page);
+    }
 
     const path = `?${sp.toString()}`;
     router.push(path);
