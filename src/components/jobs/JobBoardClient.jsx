@@ -8,6 +8,7 @@ import {
   Select,
   ListBox,
   Button,
+  Pagination,
 } from "@heroui/react";
 import {
   Magnifier,
@@ -22,9 +23,20 @@ export default function JobBoardClient({ Jobs, filters }) {
   // 1. Pristine Filter States managed via strings
   const [searchQuery, setSearchQuery] = useState(filters.search);
   const [selectedType, setSelectedType] = useState(filters.jobType || "all");
-  const [workplace, setWorkplace] = useState(filters.isRemote || "all");
+  const [workplace, setWorkplace] = useState(
+    filters.isRemote === true
+      ? "true"
+      : filters.isRemote === false
+        ? "false"
+        : "all",
+  );
 
   const router = useRouter();
+
+  const [page, setPage] = useState(1);
+  const totalItems =  Jobs.length;
+  const itemsPerPage = 10;
+  const totalPages = Math.ceil(totalItems/itemsPerPage);
 
   useEffect(() => {
     const sp = new URLSearchParams();
@@ -169,20 +181,11 @@ export default function JobBoardClient({ Jobs, filters }) {
                 >
                   <Label>All Workplace Arrangements</Label>
                 </ListBox.Item>
-                <ListBox.Item
-                  key="remote"
-                  id="remote"
-                  textValue="remote"
-                  className="px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white cursor-pointer transition-colors"
-                >
+                <ListBox.Item key="true" id="true">
                   <Label>Remote</Label>
                 </ListBox.Item>
-                <ListBox.Item
-                  key="on-site"
-                  id="on-site"
-                  textValue="on-site"
-                  className="px-4 py-2 text-sm text-neutral-300 hover:bg-neutral-800 hover:text-white cursor-pointer transition-colors"
-                >
+
+                <ListBox.Item key="false" id="false">
                   <Label>On-site / Hybrid</Label>
                 </ListBox.Item>
               </ListBox>
@@ -202,11 +205,54 @@ export default function JobBoardClient({ Jobs, filters }) {
       </div>
 
       {/* JOBS GRID DISPLAY */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {Jobs.map((job) => (
-          <JobCard key={job._id?.$oid || job._id} job={job} />
-        ))}
-      </div>
+      <>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {Jobs.map((job) => (
+            <JobCard key={job._id?.$oid || job._id} job={job} />
+          ))}
+        </div>
+        <Pagination className="w-full">
+          <Pagination.Summary>
+            Showing {startItem}-{endItem} of {totalItems} results
+          </Pagination.Summary>
+          <Pagination.Content>
+            <Pagination.Item>
+              <Pagination.Previous
+                isDisabled={page === 1}
+                onPress={() => setPage((p) => p - 1)}
+              >
+                <Pagination.PreviousIcon />
+                <span>Previous</span>
+              </Pagination.Previous>
+            </Pagination.Item>
+            {getPageNumbers().map((p, i) =>
+              p === "ellipsis" ? (
+                <Pagination.Item key={`ellipsis-${i}`}>
+                  <Pagination.Ellipsis />
+                </Pagination.Item>
+              ) : (
+                <Pagination.Item key={p}>
+                  <Pagination.Link
+                    isActive={p === page}
+                    onPress={() => setPage(p)}
+                  >
+                    {p}
+                  </Pagination.Link>
+                </Pagination.Item>
+              ),
+            )}
+            <Pagination.Item>
+              <Pagination.Next
+                isDisabled={page === totalPages}
+                onPress={() => setPage((p) => p + 1)}
+              >
+                <span>Next</span>
+                <Pagination.NextIcon />
+              </Pagination.Next>
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination>
+      </>
 
       {/* Empty State Fallback Layout */}
       {Jobs.length === 0 && (
