@@ -19,7 +19,7 @@ import {
 import JobCard from "./JobCard";
 import { useRouter } from "next/navigation";
 
-export default function JobBoardClient({ Jobs, filters }) {
+export default function JobBoardClient({ Jobs, filters, total }) {
   // 1. Pristine Filter States managed via strings
   const [searchQuery, setSearchQuery] = useState(filters.search);
   const [selectedType, setSelectedType] = useState(filters.jobType || "all");
@@ -31,20 +31,33 @@ export default function JobBoardClient({ Jobs, filters }) {
         : "all",
   );
 
-  const [page, setPage] = useState(filters.page || 1);
+  const [page, setPage] = useState(Number(filters.page) || 1);
   const router = useRouter();
 
-  const totalItems = Jobs.length;
+  const totalItems = total;
   const itemsPerPage = 12;
   const totalPages = Math.ceil(totalItems / itemsPerPage);
 
   const getPageNumbers = () => {
-    const pages = [1, 2, 3, 4, 5, 6, 7, 8];
+    const pages = [];
+    pages.push(1);
+    if (page > 3) {
+      pages.push("ellipsis");
+    }
+    const start = Math.max(2, page - 1);
+    const end = Math.min(totalPages - 1, page + 1);
+    for (let i = start; i <= end; i++) {
+      pages.push(i);
+    }
+    if (page < totalPages - 2) {
+      pages.push("ellipsis");
+    }
+    pages.push(totalPages);
     return pages;
   };
 
-  const startItem = 1;
-  const endItem = totalItems;
+  const startItem = (page - 1) * itemsPerPage + 1;
+  const endItem = Math.min(page * itemsPerPage, totalItems);
 
   useEffect(() => {
     const sp = new URLSearchParams();
@@ -65,7 +78,7 @@ export default function JobBoardClient({ Jobs, filters }) {
 
     const path = `?${sp.toString()}`;
     router.push(path);
-  }, [router, searchQuery, selectedType, workplace]);
+  }, [router, searchQuery, selectedType, workplace, page]);
 
   // Hardcoded options matching your UI design labels
   const filterTypeOptions = ["all", "Full-time", "Part-time", "Internship"];

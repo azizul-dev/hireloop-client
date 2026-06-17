@@ -12,7 +12,7 @@ export default async function Page({ searchParams }) {
   const querySearch = new URLSearchParams(filterObj)
   const queryString = querySearch.toString()
 
-  const jobs = await getJobs(queryString);
+  const {jobs, total} = await getJobs(queryString);
   console.log("JOBS DATA:", JSON.stringify(jobs?.slice(0, 2), null, 2));
 
   return (
@@ -27,7 +27,7 @@ export default async function Page({ searchParams }) {
       </div>
 
       {/* Render the core filtering component */}
-      <JobBoardClient filters={filterObj} Jobs={jobs || []} />
+      <JobBoardClient filters={filterObj} Jobs={jobs || []} total={total} />
     </div>
   );
 }
